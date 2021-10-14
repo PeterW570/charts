@@ -76,7 +76,24 @@ export function animateDot(dot, x, y) {
 
 export function animatePath(paths, newXList, newYList, zeroLine, spline) {
 	let pathComponents = [];
-	let pointsStr = newYList.map((y, i) => (newXList[i] + ',' + y)).join("L");
+
+	let pointsList = newYList.map((y, i) => y === null ? null : (newXList[i] + ',' + y));
+	let pointsStr = "";
+	let previousPointWasNull = false;
+	for (let idx = 0; idx < pointsList.length; idx++) {
+		if (pointsList[idx] === null) {
+			previousPointWasNull = true;
+			continue;
+		}
+		if (pointsStr.length === 0) pointsStr = pointsList[idx];
+		else if (previousPointWasNull) {
+			pointsStr += "M" + pointsList[idx];
+		}
+		else {
+			pointsStr += "L" + pointsList[idx];
+		}
+		previousPointWasNull = false;
+	}
 
 	if (spline)
 		pointsStr = getSplineCurvePointsStr(newXList, newYList);

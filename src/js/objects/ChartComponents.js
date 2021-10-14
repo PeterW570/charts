@@ -381,6 +381,7 @@ let componentConfigs = {
 			this.units = [];
 			if(!c.hideDots) {
 				this.units = data.yPositions.map((y, j) => {
+					if (y === null) return null;
 					return datasetDot(
 						data.xPositions[j],
 						y,
@@ -389,7 +390,7 @@ let componentConfigs = {
 						(c.valuesOverPoints ? data.values[j] : ''),
 						j
 					);
-				});
+				}).filter(unit => unit !== null);
 			}
 
 			return Object.values(this.paths).concat(this.units);
@@ -424,9 +425,11 @@ let componentConfigs = {
 			}
 
 			if(this.units.length) {
+				let newXPosNoNull = newXPos.map((val, i) => newYPos[i] === null ? null : val).filter(val => val !== null);
+				let newYPosNoNull = newYPos.filter(val => val !== null);
 				this.units.map((dot, i) => {
 					animateElements = animateElements.concat(animateDot(
-						dot, newXPos[i], newYPos[i]));
+						dot, newXPosNoNull[i], newYPosNoNull[i]));
 				});
 			}
 

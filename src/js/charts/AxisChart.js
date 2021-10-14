@@ -104,7 +104,7 @@ export default class AxisChart extends BaseChart {
 
 	calcDatasetPoints() {
 		let s = this.state;
-		let scaleAll = values => values.map(val => scale(val, s.yAxis));
+		let scaleAll = values => values.map(val => val === null ? null : scale(val, s.yAxis));
 
 		s.datasets = this.data.datasets.map((d, i) => {
 			let values = d.values;
@@ -132,7 +132,7 @@ export default class AxisChart extends BaseChart {
 		s.yExtremes = new Array(s.datasetLength).fill(9999);
 		s.datasets.map(d => {
 			d.yPositions.map((pos, j) => {
-				if(pos < s.yExtremes[j]) {
+				if(pos !== null && pos < s.yExtremes[j]) {
 					s.yExtremes[j] = pos;
 				}
 			});
@@ -377,7 +377,7 @@ export default class AxisChart extends BaseChart {
 				label: label,
 				formattedLabel: formatX ? formatX(label) : label,
 				xPos: s.xAxis.positions[index],
-				values: values,
+				values: values.filter(v => v.value !== null),
 				yExtreme: s.yExtremes[index],
 			};
 		});

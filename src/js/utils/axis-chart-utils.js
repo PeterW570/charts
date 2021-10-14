@@ -58,15 +58,12 @@ export function dataPrep(data, type) {
 }
 
 export function zeroDataPrep(realData) {
-	let datasetLength = realData.labels.length;
-	let zeroArray = new Array(datasetLength).fill(0);
-
 	let zeroData = {
-		labels: realData.labels.slice(0, -1),
+		labels: realData.labels.slice(0),
 		datasets: realData.datasets.map(d => {
 			return {
 				name: '',
-				values: zeroArray.slice(0, -1),
+				values: d.values.map(val => val === null ? null : 0),
 				chartType: d.chartType
 			};
 		}),

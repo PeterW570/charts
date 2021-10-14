@@ -588,8 +588,23 @@ export function datasetDot(x, y, radius, color, label='', index=0) {
 }
 
 export function getPaths(xList, yList, color, options={}, meta={}) {
-	let pointsList = yList.map((y, i) => (xList[i] + ',' + y));
-	let pointsStr = pointsList.join("L");
+	let pointsList = yList.map((y, i) => y === null ? null : (xList[i] + ',' + y));
+	let pointsStr = "";
+	let previousPointWasNull = false;
+	for (let idx = 0; idx < pointsList.length; idx++) {
+		if (pointsList[idx] === null) {
+			previousPointWasNull = true;
+			continue;
+		}
+		if (pointsStr.length === 0) pointsStr = pointsList[idx];
+		else if (previousPointWasNull) {
+			pointsStr += "M" + pointsList[idx];
+		}
+		else {
+			pointsStr += "L" + pointsList[idx];
+		}
+		previousPointWasNull = false;
+	}
 
 	// Spline
 	if (options.spline)
